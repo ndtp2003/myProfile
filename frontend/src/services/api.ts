@@ -3,6 +3,15 @@ import { useAuthStore } from '../store/authStore';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
+// Debug logging in development
+if (process.env.REACT_APP_ENABLE_DEBUG === 'true') {
+  console.log('🔧 API Configuration:', {
+    baseURL: API_BASE_URL,
+    environment: process.env.REACT_APP_ENVIRONMENT,
+    version: process.env.REACT_APP_VERSION
+  });
+}
+
 // Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,

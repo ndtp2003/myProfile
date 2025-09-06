@@ -4,15 +4,28 @@
   "description": "Personal CV Portfolio Website with React and Node.js",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev": "npm run setup:dev && concurrently \"npm run server\" \"npm run client\"",
     "server": "cd backend && npm run dev",
     "client": "cd frontend && npm start",
-    "build": "cd frontend && npm run build",
-    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+    "build": "npm run setup:prod && cd frontend && npm run build",
+    "build:prod": "npm run setup:prod && cd backend && npm run build && cd ../frontend && npm run build",
+    "start": "cd backend && npm start",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "test": "cd frontend && npm test",
+    "lint": "cd frontend && npm run lint && cd ../backend && npm run lint",
+    "seed": "cd backend && node scripts/seed.js",
+    "setup:dev": "node scripts/setup-env.js development",
+    "setup:prod": "node scripts/setup-env.js production",
+    "clean": "rm -rf node_modules backend/node_modules frontend/node_modules backend/.env frontend/.env",
+    "fresh-install": "npm run clean && npm run install-all"
   },
-  "keywords": ["cv", "portfolio", "react", "nodejs", "mongodb"],
+  "keywords": ["cv", "portfolio", "react", "nodejs", "mongodb", "typescript"],
   "author": "ndtp2003",
   "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "devDependencies": {
     "concurrently": "^8.2.2"
   }

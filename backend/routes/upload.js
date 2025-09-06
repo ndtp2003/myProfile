@@ -6,10 +6,13 @@ const { adminAuth } = require('../middleware/auth');
 const router = express.Router();
 
 // Initialize Supabase client
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+let supabase = null;
+if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
+  supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+  );
+}
 
 // Configure multer for memory storage
 const storage = multer.memoryStorage();
@@ -33,6 +36,10 @@ const upload = multer({
 // @access  Private (Admin)
 router.post('/image', adminAuth, upload.single('image'), async (req, res) => {
   try {
+    if (!supabase) {
+      return res.status(500).json({ message: 'Supabase not configured' });
+    }
+    
     if (!req.file) {
       return res.status(400).json({ message: 'No image file provided' });
     }
@@ -76,6 +83,10 @@ router.post('/image', adminAuth, upload.single('image'), async (req, res) => {
 // @access  Private (Admin)
 router.delete('/image', adminAuth, async (req, res) => {
   try {
+    if (!supabase) {
+      return res.status(500).json({ message: 'Supabase not configured' });
+    }
+    
     const { path } = req.body;
     
     if (!path) {
@@ -104,6 +115,10 @@ router.delete('/image', adminAuth, async (req, res) => {
 // @access  Private (Admin)
 router.get('/images', adminAuth, async (req, res) => {
   try {
+    if (!supabase) {
+      return res.status(500).json({ message: 'Supabase not configured' });
+    }
+    
     const { data, error } = await supabase.storage
       .from('images')
       .list('cv-images', {
